@@ -57,14 +57,6 @@ public class BaseTest {
         }
         VideoRecorder.startRecording(driver);
 
-//            if (Environment.getDomain().contains("dev")) {
-//                String[] pageUrlParts = Environment.getDomain().split("(?<=//)");
-//                String baseURL = pageUrlParts[0] + "serpstat:devserptest@" + pageUrlParts[1];
-//                System.out.println(baseURL);
-//                driver.get(baseURL);
-//            } else {
-//        driver.get(Environment.getDomain());
-//        }
         driver.get(Environment.getDomain());
 
        SelectLanguage selectLanguage = new SelectLanguage(driver);
@@ -76,9 +68,9 @@ public class BaseTest {
         return driver;
     }
 
-//    @AfterMethod
-//    public void teardown (ITestResult iTestResult) {
-//        driver.close();
-//        driver.quit();
-//    }
+    @AfterMethod
+    public void teardown (ITestResult iTestResult) {
+        driver.close();
+        driver.quit();
+    }
 }

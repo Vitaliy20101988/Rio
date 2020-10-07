@@ -1,7 +1,11 @@
 package tests;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import listeners.ScreenshotListener;
+import listeners.VideoListener;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.AdvertisementSearchPage;
 import pages.BasePage;
@@ -14,11 +18,10 @@ import texts.Texts;
 import utils.Asserts;
 import utils.FieldsInteraction;
 import utils.Loader;
-import utils.Waits;
 
-//@Epic("Regression")
-//@Feature("Authorization Tests")
-//@Listeners({ScreenshotListener.class, VideoListener.class})
+@Epic("Regression")
+@Feature("Authorization Tests")
+@Listeners({ScreenshotListener.class, VideoListener.class})
 
 public class AdvertisementSearchTests extends BaseTest {
 
@@ -60,7 +63,7 @@ public class AdvertisementSearchTests extends BaseTest {
         Asserts asserts = new Asserts(driver);
         basePage.enterData(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), searchingValue)
                 .click(SelectorsOfHomePage.SEARCH_BUTTON.getValue());
-        advertisementSearchPage.verifyFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_PICTURE.getValue(), SelectorsOfAdvertisementSearch.WITH_PICTURE_EXPANDED_SEARCH_INPUT_FIELD.getValue());
+        advertisementSearchPage.verifyCheckboxFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_PICTURE.getValue(), SelectorsOfAdvertisementSearch.WITH_PICTURE_EXPANDED_SEARCH_INPUT_FIELD.getValue());
         basePage.click(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_PICTURE.getValue());
         asserts.assertElementIsNotPresent(SelectorsOfAdvertisementSearch.WITH_PICTURE_EXPANDED_SEARCH_INPUT_FIELD.getValue());
 
@@ -73,7 +76,7 @@ public class AdvertisementSearchTests extends BaseTest {
         Asserts asserts = new Asserts(driver);
         basePage.enterData(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), searchingValue)
                 .click(SelectorsOfHomePage.SEARCH_BUTTON.getValue());
-        advertisementSearchPage.verifyFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_VIDEO.getValue(), SelectorsOfAdvertisementSearch.WITH_VIDEO_EXPANDED_SEARCH_INPUT_FIELD.getValue());
+        advertisementSearchPage.verifyCheckboxFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_VIDEO.getValue(), SelectorsOfAdvertisementSearch.WITH_VIDEO_EXPANDED_SEARCH_INPUT_FIELD.getValue());
         basePage.click(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_VIDEO.getValue());
         asserts.assertElementIsNotPresent(SelectorsOfAdvertisementSearch.WITH_VIDEO_EXPANDED_SEARCH_INPUT_FIELD.getValue());
     }
@@ -86,8 +89,8 @@ public class AdvertisementSearchTests extends BaseTest {
         Loader loader = new Loader(driver);
         basePage.enterData(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), searchingValue)
                 .click(SelectorsOfHomePage.SEARCH_BUTTON.getValue());
-        advertisementSearchPage.verifyFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_VIDEO.getValue(), SelectorsOfAdvertisementSearch.WITH_VIDEO_EXPANDED_SEARCH_INPUT_FIELD.getValue());
-        advertisementSearchPage.verifyFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_PICTURE.getValue(), SelectorsOfAdvertisementSearch.WITH_PICTURE_EXPANDED_SEARCH_INPUT_FIELD.getValue());
+        advertisementSearchPage.verifyCheckboxFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_VIDEO.getValue(), SelectorsOfAdvertisementSearch.WITH_VIDEO_EXPANDED_SEARCH_INPUT_FIELD.getValue());
+        advertisementSearchPage.verifyCheckboxFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_PICTURE.getValue(), SelectorsOfAdvertisementSearch.WITH_PICTURE_EXPANDED_SEARCH_INPUT_FIELD.getValue());
         basePage.click(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_VIDEO.getValue());
         loader.waitLoader();
         basePage.click(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_PICTURE.getValue());
@@ -99,12 +102,25 @@ public class AdvertisementSearchTests extends BaseTest {
     public void verifySearchResultWithActiveCheckboxWorkNow(String searchingValue) {
         BasePage basePage = new HomePage(driver);
         AdvertisementSearchPage advertisementSearchPage = new AdvertisementSearchPage(driver);
+        Loader loader = new Loader(driver);
+        basePage.enterData(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), searchingValue)
+                .click(SelectorsOfHomePage.SEARCH_BUTTON.getValue());
+        advertisementSearchPage.verifyCheckboxFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WORK_NOW.getValue());
+        loader.waitLoader();
+        basePage.click(SelectorsOfAdvertisementSearch.CHECKBOX_WORK_NOW.getValue());
+    }
+
+    @Test(priority = 1, description = "", dataProvider = "searchingValue")
+    public void verifySearchResultWithActiveCheckboxWithDiscount(String searchingValue) {
+        BasePage basePage = new HomePage(driver);
+        AdvertisementSearchPage advertisementSearchPage = new AdvertisementSearchPage(driver);
         Asserts asserts = new Asserts(driver);
         basePage.enterData(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), searchingValue)
                 .click(SelectorsOfHomePage.SEARCH_BUTTON.getValue());
-        advertisementSearchPage.verifyFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WORK_NOW.getValue());
+        advertisementSearchPage.verifyCheckboxFilter(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_DISCOUNT.getValue(), SelectorsOfAdvertisementSearch.WITH_DISCOUNT_EXPANDED_SEARCH_INPUT_FIELD.getValue());
+        basePage.click(SelectorsOfAdvertisementSearch.CHECKBOX_WITH_DISCOUNT.getValue());
+        asserts.assertElementIsNotPresent(SelectorsOfAdvertisementSearch.WITH_DISCOUNT_EXPANDED_SEARCH_INPUT_FIELD.getValue());
     }
-
 
     @DataProvider(name = "searchingValue")
     public static Object[][] validSearchingValues() {

@@ -23,8 +23,8 @@ public class Texts {
     };
 
     private static final String[] FROM = {
-            "От",
-            "Від"
+            "Від",
+            "От"
     };
 
     private static final String[] TILL = {

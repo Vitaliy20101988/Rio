@@ -11,8 +11,6 @@ import params.Environment;
 public class Asserts extends BasePage{
 
     private final Waits waits = new Waits(driver);
-    private final FieldsInteraction fieldsInteraction = new FieldsInteraction(driver);
-
 
     public Asserts(WebDriver driver) {
         super(driver, 60);
@@ -20,15 +18,6 @@ public class Asserts extends BasePage{
 
     public Asserts(WebDriver driver, int waitTime) {
         super(driver, waitTime);
-    }
-
-    public void assertInputValue(String elementBy, String expectedValue) {
-        Assert.assertEquals(fieldsInteraction.getInputValue(elementBy), expectedValue);
-    }
-
-    public void assertElementText(String elementBy, String expectedText) {
-        waits.waitVisibility(elementBy);
-        Assert.assertEquals(fieldsInteraction.getText(elementBy), expectedText);
     }
 
     public void assertURLEqualsToCurrent(String expectedURL) {
@@ -41,11 +30,6 @@ public class Asserts extends BasePage{
         Assert.assertTrue(driver.getCurrentUrl().contains(expectedURL));
     }
 
-    public void assertElementContainsText (String elementBy, String textPart) {
-        String text = fieldsInteraction.getText(elementBy);
-        assert text.contains(textPart);
-    }
-
     public void assertElementPresent(String elementBy) {
         try {
             waits.waitVisibility(elementBy);
@@ -56,15 +40,9 @@ public class Asserts extends BasePage{
         }
     }
 
-
     public void assertElementIsNotPresent(String elementBy) {
         waits.waitInvisibility(elementBy);
         Assert.assertFalse(elementExist(elementBy));
-    }
-
-    public void assertPositiveValue(String elementBy) {
-        Assert.assertTrue(Integer.parseInt(fieldsInteraction.getText(elementBy)) >= 0);
-        System.out.println(fieldsInteraction.getText(elementBy));
     }
 
     public void assertTextEquals(String actualResult, String expectedResult) {
@@ -74,9 +52,4 @@ public class Asserts extends BasePage{
     public void assertTextContains(String actualText, String expectedTextPart) {
         Assert.assertTrue(actualText.contains(expectedTextPart));
     }
-
-    public void assertElementIsClickable(String element) {
-        waits.waitElementClickable(element);
-    }
-
 }

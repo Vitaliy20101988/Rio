@@ -3,6 +3,7 @@ package pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import params.Environment;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.Waits;
@@ -18,16 +19,6 @@ public abstract class BasePage {
     public BasePage (WebDriver driver, int waitTime) {
         this.driver = driver;
         wait = new WebDriverWait(driver, waitTime);
-    }
-
-    // Create full Page URLS based on domain set in Jenkins or Environment class
-    public ArrayList<String> setURLS (String[] urlEndPoints) {
-        ArrayList <String> URLS = new ArrayList<>();
-        String domain = Environment.getDomain();
-        for (int i = 0; i < urlEndPoints.length; i++) {
-            URLS.add(domain + urlEndPoints[i]);
-        }
-        return URLS;
     }
 
     public void createNewBrowserTab() {
@@ -48,20 +39,6 @@ public abstract class BasePage {
         driver.switchTo().window(tabs.get(tabNum)); //switches to new tab
     }
 
-    //    @Step("Open page url: {0}")
-    public BasePage openPage(String pageUrl) {
-        if (Environment.getDomain().contains("dev")) {
-            String[] pageUrlParts = pageUrl.split("(?<=//)");
-            String baseURL = pageUrlParts[0] + "serpstat:devserptest@" + pageUrlParts[1];
-            System.out.println(baseURL);
-            driver.get(baseURL);
-        } else {
-            driver.get(pageUrl);
-        }
-        return this;
-    }
-
-    //    @Step("Click element by path: {0}")
     public BasePage click (String elementBy) {
         Waits waits = new Waits(driver);
         waits.waitVisibility(elementBy);
@@ -69,22 +46,7 @@ public abstract class BasePage {
         return this;
     }
 
-    //    @Step("Click element by path: {0}")
-    public void clickElement(String elementBy) {
-        Waits waits = new Waits(driver);
-        waits.waitVisibility(elementBy);
-        boolean staleElement = true;
-        while(staleElement){
-            try{
-                driver.findElement(By.xpath(elementBy)).click();
-                staleElement = false;
-            } catch(StaleElementReferenceException e){
-                //might be chance for infinity--coz (if the try-block keep on -failing.it won't resolve the issue,--> My Percepton in one case.)
-            }
-        }
-    }
-
-    public BasePage clearField(String elementBy, String text) {
+    public BasePage clearField(String elementBy) {
         Waits waits = new Waits(driver);
         waits.waitVisibility(elementBy);
         driver.findElement(By.xpath(elementBy)).click();
@@ -92,7 +54,6 @@ public abstract class BasePage {
         return this;
     }
 
-    //   @Step("Enter data: {1} to element path: {0}")
     public BasePage enterData(String elementBy, String text) {
         Waits waits = new Waits(driver);
         waits.waitVisibility(elementBy);
@@ -121,6 +82,13 @@ public abstract class BasePage {
         scroll.keyPress(KeyEvent.VK_PAGE_DOWN);
     }
 
+    public void select(String element, String value) {
+        Waits waits = new Waits(driver);
+        waits.waitVisibility(element);
+        Select select = new Select(driver.findElement(By.xpath(element)));
+        select.selectByValue(value);
+    }
+
     public void clickButtonEnter() {
         Robot robot = null;
         try {
@@ -129,16 +97,6 @@ public abstract class BasePage {
             e.printStackTrace();
         }
         robot.keyPress(KeyEvent.VK_ENTER);
-    }
-
-    public void clickButtonBackspace() {
-        Robot robot = null;
-        try {
-            robot = new Robot();
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }
-        robot.keyPress(KeyEvent.VK_BACK_SPACE);
     }
 
     public boolean elementExist(String elementBy) {
@@ -150,7 +108,6 @@ public abstract class BasePage {
         }
     }
 
-    //    @Step ("Move cursor to element path: {0}")
     public void moveToElementByCssSelector(String elementBy) {
         Waits waits = new Waits(driver);
         waits.waitVisibilityByCssSelector(elementBy);
@@ -159,11 +116,5 @@ public abstract class BasePage {
         WebElement elem = driver.findElement(By.cssSelector(elementBy));
         action.moveToElement(elem);
         action.perform();
-    }
-
-    public BasePage avoidCapture() {
-        Cookie avoidCaptcha = new Cookie("serpautotest", "true");
-        driver.manage().addCookie(avoidCaptcha);
-        return this;
     }
 }

@@ -20,9 +20,9 @@ import utils.FieldsInteraction;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-//@Epic("Regression")
-//@Feature("Authorization Tests")
-//@Listeners({ScreenshotListener.class, VideoListener.class})
+@Epic("Regression")
+@Feature("Authorization Tests")
+@Listeners({ScreenshotListener.class, VideoListener.class})
 
 public class HomePageTests extends BaseTest {
 
@@ -39,7 +39,7 @@ public class HomePageTests extends BaseTest {
         FieldsInteraction fieldsInteraction = new FieldsInteraction(driver);
         basePage.enterData(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), searchingValue);
         asserts.assertTextEquals(fieldsInteraction.getAttributeValue(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), "value"), searchingValue);
-        basePage.clearField(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), "");
+        basePage.clearField(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue());
         Assert.assertTrue(fieldsInteraction.getAttributeValue(SelectorsOfHomePage.SEARCH_INPUT_FIELD.getValue(), "value").isEmpty());
     }
 

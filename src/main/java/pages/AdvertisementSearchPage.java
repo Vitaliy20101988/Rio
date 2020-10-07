@@ -28,7 +28,38 @@ public class AdvertisementSearchPage extends BasePage {
         String ticketPrice = String.valueOf(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()));
         Assert.assertEquals(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()).getClass().getName(),
                 "java.lang.String");
-        Assert.assertTrue(!ticketPrice.equals("null") && !ticketName.trim().isEmpty());
+        Assert.assertTrue(!ticketPrice.equals("null") && !ticketPrice.trim().isEmpty());
+    }
+
+    public void verifyMinPriceParam(int expectedValue) {
+        // receive price from first ticket
+        Loader loader = new Loader(driver);
+        loader.waitLoader();
+        String ticketPrice = String.valueOf(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()));
+        Assert.assertEquals(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()).getClass().getName(),
+                "java.lang.String");
+        Assert.assertTrue(!ticketPrice.equals("null") && !ticketPrice.trim().isEmpty());
+        try {
+            System.out.println(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()));
+            Assert.assertTrue(Integer.parseInt(
+                    fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue())) >= expectedValue);
+        } catch (NumberFormatException e) {
+            Assert.fail(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()) + " cannot be parse to type int");
+        }
+    }
+
+        public void verifyMaxPriceParam(int expectedValue) {
+            // receive price from first ticket
+            String ticketPrice = String.valueOf(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()));
+            Assert.assertEquals(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()).getClass().getName(),
+                    "java.lang.String");
+            Assert.assertTrue(!ticketPrice.equals("null") && !ticketPrice.trim().isEmpty());
+            try {
+                Assert.assertTrue(Integer.parseInt(
+                        fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue())) <= expectedValue);
+            } catch (NumberFormatException e) {
+                Assert.fail(fieldsInteraction.getText(SelectorsOfAdvertisementSearch.FIRST_TICKET_PRICE_IN_SEARCH_RESULT.getValue()) + " cannot be parse to type int");
+            }
     }
 
     private int receiveTotalQuantityOfTickets() {
@@ -47,7 +78,7 @@ public class AdvertisementSearchPage extends BasePage {
         return resultValueOfTickets;
     }
 
-    public void verifyFilter(String filterElement, String expectedVisibleElement) {
+    public void verifyCheckboxFilter(String filterElement, String expectedVisibleElement) {
         Loader loader = new Loader(driver);
         int sumResultBeforeFilter = receiveTotalQuantityOfTickets();
         click(filterElement);
@@ -58,7 +89,7 @@ public class AdvertisementSearchPage extends BasePage {
         Assert.assertTrue(sumResultAfterFilter <= sumResultBeforeFilter, errMsg);
     }
 
-    public void verifyFilter(String filterElement) {
+    public void verifyCheckboxFilter(String filterElement) {
         Loader loader = new Loader(driver);
         int sumResultBeforeFilter = receiveTotalQuantityOfTickets();
         click(filterElement);
@@ -68,4 +99,15 @@ public class AdvertisementSearchPage extends BasePage {
         Assert.assertTrue(sumResultAfterFilter <= sumResultBeforeFilter, errMsg);
     }
 
+    public void verifyInputFilter(String filterElement, String filterValue, String expectedVisibleElement) {
+        Loader loader = new Loader(driver);
+        int sumResultBeforeFilter = receiveTotalQuantityOfTickets();
+        enterData(filterElement, filterValue);
+        clickButtonEnter();
+        asserts.assertElementPresent(expectedVisibleElement);
+        loader.waitLoader();
+        int sumResultAfterFilter = receiveTotalQuantityOfTickets();
+        String errMsg = "sumResultTicketsAfterFilter: " + sumResultAfterFilter + " cannot be less then sumResultBeforeFilter " + sumResultBeforeFilter;
+        Assert.assertTrue(sumResultAfterFilter <= sumResultBeforeFilter, errMsg);
+    }
 }

@@ -14,7 +14,7 @@ public class Loader extends BasePage {
     public Loader waitLoader() {
         Waits waits = new Waits(driver);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

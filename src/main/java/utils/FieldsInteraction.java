@@ -21,13 +21,4 @@ public class FieldsInteraction extends BasePage {
         waits.waitVisibility(elementBy);
         return driver.findElement(By.xpath(elementBy)).getAttribute(attributeName);
     }
-
-    public String getAttributeValueByCssSelector(String elementBy, String attributeName) {
-        waits.waitVisibilityByCssSelector(elementBy);
-        return driver.findElement(By.cssSelector(elementBy)).getAttribute(attributeName);
-    }
-
-    public String getInputValue(String elementBy) {
-        return driver.findElement(By.xpath(elementBy)).getAttribute("value");
-    }
 }
